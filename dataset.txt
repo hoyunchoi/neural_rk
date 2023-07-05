@@ -1,0 +1,66 @@
+============================================  Burgers ============================================
+Spacial domain: 0 <= x, y <= 1
+Initial condition: 2D sin function (sin(x) * sin(y)) with random phase
+Boundary condtion: periodic both x-axis and y-axis
+
+
+---------- [Initial Condition] ----------
+- Initial condition: Different over all samples
+- Graph(Grid): regular 2D square lattice, with all grid points are seperated equally
+- Parameter (nu): constant as 0.01 over all samples
+- Use 4th order Runge-Kutta method with constant time step. dt = 2.0 / 2000 = 10^-3
+
+< Commands >
+python burgers/simulate.py --name=IC_train --Nx 100 --Ny 100 --nu 0.01 --num_samples=50 --seed=0 --const_graph --const_dt --const_param &;
+python burgers/simulate.py --name=IC_val --Nx 100 --Ny 100 --nu 0.01 --num_samples=20 --seed=1 --const_graph --const_dt --const_param &;
+python burgers/simulate.py --name=IC_test --Nx 100 --Ny 100 --nu 0.01 --num_samples=20 --seed=2 --const_graph --const_dt --const_param &;
+
+
+---------- [Grid/Graph] ----------
+- Initial condition: Same over all samples in functional form. Since grid is different, data points are different
+- Graph(Grid): non-regular 2D square lattice, with all grid points are spaced randomly.
+  Grids are different over samples
+- Parameter (nu): constant as 0.01 over all samples
+- Use 4th order Runge-Kutta method with constant time step. dt = 2.0 / 2000 = 10^-3
+
+< Commands >
+python burgers/simulate.py --name=G_train --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --nu 0.01 --num_samples=50 --seed=3 --const_dt --const_param --const_ic &;
+python burgers/simulate.py --name=G_val --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --nu 0.01 --num_samples=20 --seed=3 --const_dt --const_param --const_ic &;
+python burgers/simulate.py --name=G_test --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --nu 0.01 --num_samples=20 --seed=3 --const_dt --const_param --const_ic &;
+
+---------- [Parameter] ----------
+- Initial condition: Same over all samples in functional form. Since grid is different, data points are different
+- Graph(Grid): regular 2D square lattice, with all grid points are seperated equally
+- Parameter (nu): choosen randomly between 0.005 and 0.01. nu is different over all samples
+- Use 4th order Runge-Kutta method with constant time step. dt = 2.0 / 2000 = 10^-3
+
+< Commands >
+python burgers/simulate.py --name=P_train --Nx 100 --Ny 100 --nu 0.005 0.01 --num_samples=50 --seed=6 --const_graph --const_dt --const_ic &;
+python burgers/simulate.py --name=P_val --Nx 100 --Ny 100 --nu 0.005 0.01 --num_samples=20 --seed=7 --const_graph --const_dt --const_ic &;
+python burgers/simulate.py --name=P_test --Nx 100 --Ny 100 --nu 0.005 0.01 --num_samples=20 --seed=8 --const_graph --const_dt --const_ic &;
+
+---------- [RK, dt] ----------
+- Initial condition: Same over all samples in functional form. Since grid is different, data points are different
+- Graph(Grid): regular 2D square lattice, with all grid points are seperated equally
+- Parameter (nu): constant as 0.01 over all samples
+- For training/validation, use 1st order Runge-Kutta method and for test, use 4th order Runge-Kutta method
+  Time step dt is not uniform, and different over samples
+
+< Commands >
+python burgers/simulate.py --name=RK_train --Nx 100 --Ny 100 --nu 0.01 --solver=rk1 --dt_delta=0.1 --num_samples=50 --seed=9 --const_graph --const_param --const_ic &;
+python burgers/simulate.py --name=RK_val --Nx 100 --Ny 100 --nu 0.01 --solver=rk1 --dt_delta=0.1 --num_samples=20 --seed=10 --const_graph --const_param --const_ic &;
+python burgers/simulate.py --name=RK_test --Nx 100 --Ny 100 --nu 0.01 --solver=rk4 --dt_delta=0.1 --num_samples=20 --seed=11 --const_graph --const_param --const_ic &;
+
+---------- [All] ----------
+Every 4 domain is different
+- Initial condition: Different over all samples
+- Graph(Grid): non-regular 2D square lattice, with all grid points are spaced randomly.
+  Grids are different over samples
+- Parameter (nu): choosen randomly between 0.005 and 0.01. nu is different over all samples
+- For training/validation, use 1st order Runge-Kutta method and for test, use 4th order Runge-Kutta method
+  Time step dt is not uniform, and different over samples
+
+< Commands >
+nohup python burgers/simulate.py --name=A_train --Nx 50 150 --Ny 50 150 --nu 0.05 0.01 --solver=rk1 --dt_delta=0.1 --num_samples=50 --seed=12 &;
+nohup python burgers/simulate.py --name=A_val --Nx 50 150 --Ny 50 150 --nu 0.05 0.01 --solver=rk1 --dt_delta=0.1 --num_samples=20 --seed=13 &;
+nohup python burgers/simulate.py --name=A_test --Nx 50 150 --Ny 50 150 --nu 0.05 0.01 --solver=rk4 --dt_delta=0.1 --num_samples=20 --seed=14 &;
