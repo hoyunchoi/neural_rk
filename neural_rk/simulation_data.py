@@ -52,6 +52,10 @@ def to_df(data: list[SimulationData], directed: bool = False) -> pd.DataFrame:
         df.edge_attr = df.edge_attr.map(torch.from_numpy)
     else:
         # [2, 2E] / [2E, edge_dim]
-        df.edge_index = df.edge_index.map(torch.from_numpy(gUtils.directed2undirected))
-        df.edge_attr = df.edge_attr.map(torch.from_numpy(gUtils.repeat_weight))
+        df.edge_index = df.edge_index.map(
+            lambda arr: torch.from_numpy(gUtils.directed2undirected(arr))
+        )
+        df.edge_attr = df.edge_attr.map(
+            lambda arr: torch.from_numpy(gUtils.repeat_weight(arr))
+        )
     return df

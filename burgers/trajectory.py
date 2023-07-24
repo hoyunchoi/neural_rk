@@ -13,7 +13,7 @@ class IsDiverging:
     def __call__(self, trajectory: torch.Tensor) -> torch.BoolTensor:
         return cast(
             torch.BoolTensor,
-            trajectory.isnan().any() + (trajectory.abs() > self.tolerance).any(),
+            trajectory.isnan().any() + trajectory.abs().max() > self.tolerance,
         )
 
 
@@ -28,7 +28,9 @@ class IsDivergingPrecise:
 
         diverging_indices = (trajectory.abs() > self.tolerance).nonzero()
         if diverging_indices.numel():
-            print(f"Diverging detected at {[idx.tolist() for idx in diverging_indices]}")
+            print(
+                f"Diverging detected at {[idx.tolist() for idx in diverging_indices]}"
+            )
             return cast(torch.BoolTensor, torch.tensor(True, dtype=torch.bool))
         return cast(torch.BoolTensor, torch.tensor(False, dtype=torch.bool))
 
@@ -55,7 +57,7 @@ def compare_trajectory(
         step, node, axis = max_err_idx
         uvw = ["u", "v", "w"]
         print(
-            f"MAE: {abs_error.mean():.4f}, "
-            f"Maximum err: {abs_error[max_err_idx]:.4f} at {step=}, {node=}, field={uvw[axis]}"
+            f"MAE: {abs_error.mean():.4f}, Maximum err: {abs_error[max_err_idx]:.4f} at"
+            f" {step=}, {node=}, field={uvw[axis]}"
         )
     return np.mean(abs_error, axis=1)

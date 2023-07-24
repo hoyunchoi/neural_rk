@@ -5,15 +5,14 @@ import pandas as pd
 import torch
 import torch.multiprocessing as mp
 
-from neural_rk.dataset import Dataset
 from burgers.approximator import BurgersApproximator
+from heat.approximator import HeatApproximator
+from kuramoto.approximator import KuramotoApproximator
 from neural_rk.experiment import run
 from neural_rk.hyperparameter import HyperParameter, get_hp
 from neural_rk.modules import prune_state_dict
 from neural_rk.path import DATA_DIR, RESULT_DIR
 from neural_rk.scaler import fit_in_scaler, fit_out_scaler
-from heat.approximator import HeatApproximator
-from kuramoto.approximator import KuramotoApproximator
 from rossler.approximator import RosslerApproximator
 
 
@@ -82,9 +81,6 @@ def main(hp: HyperParameter, save: bool = True) -> None:
             approximator,
             train_df,
             val_df,
-            # train_dataset,
-            # val_dataset,
-            # rollout_dataset,
             optimizer_state_dict,
             grad_scaler_state_dict,
             save,
@@ -100,9 +96,6 @@ def main(hp: HyperParameter, save: bool = True) -> None:
                 approximator,
                 train_df,
                 val_df,
-                # train_dataset,
-                # val_dataset,
-                # rollout_dataset,
                 optimizer_state_dict,
                 grad_scaler_state_dict,
                 save,

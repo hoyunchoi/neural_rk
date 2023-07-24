@@ -109,11 +109,11 @@ def solve(
     else:
         rk = functools.partial(rk4, weighted_laplacian_matrix)
 
-    trajectory = np.stack([np.empty_like(temperature)] * (len(dts) + 1))
-    trajectory[0] = temperature
+    temperatures = np.stack([np.zeros_like(temperature)] * (len(dts) + 1))
+    temperatures[0] = temperature
 
     for step, dt in enumerate(dts):
         temperature = rk(temperature, dt)
-        trajectory[step + 1] = temperature
+        temperatures[step + 1] = temperature
 
-    return trajectory
+    return temperatures

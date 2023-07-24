@@ -4,6 +4,7 @@ import numpy as np
 import numpy.typing as npt
 import torch
 
+arr = npt.NDArray[np.float32]
 TOLERANCE = 1.0
 
 
@@ -37,10 +38,8 @@ class IsDivergingPrecise:
 
 
 def compare_trajectory(
-    trajectory1: npt.NDArray[np.float32] | torch.Tensor,
-    trajectory2: npt.NDArray[np.float32] | torch.Tensor,
-    log: bool = True,
-) -> npt.NDArray[np.float32]:
+    trajectory1: arr | torch.Tensor, trajectory2: arr | torch.Tensor, log: bool = True
+) -> arr:
     """
     trajectory1: [S+1, N, 1]
     trajectory2: [S+1, N, 1]

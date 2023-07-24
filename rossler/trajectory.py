@@ -4,6 +4,7 @@ import numpy as np
 import numpy.typing as npt
 import torch
 
+arr = npt.NDArray[np.float32]
 TOLERANCE = 100.0
 
 
@@ -35,10 +36,8 @@ class IsDivergingPrecise:
 
 
 def compare_trajectory(
-    trajectory1: npt.NDArray[np.float32] | torch.Tensor,
-    trajectory2: npt.NDArray[np.float32] | torch.Tensor,
-    log: bool = True,
-) -> npt.NDArray[np.float32]:
+    trajectory1: arr | torch.Tensor, trajectory2: arr | torch.Tensor, log: bool = True
+) -> arr:
     """
     trajectory1: [S+1, N, 3]
     trajectory2: [S+1, N, 3]
@@ -56,8 +55,7 @@ def compare_trajectory(
         step, node, coordinate = max_err_idx
         xyz = ["x", "y", "z"]
         print(
-            f"MAE: {abs_error.mean():.4f}, "
-            f"Maximum err: {abs_error[max_err_idx]:.4f} at {step=}, {node=}, coordinate={xyz[coordinate]}"
+            f"MAE: {abs_error.mean():.4f}, Maximum err: {abs_error[max_err_idx]:.4f} at"
+            f" {step=}, {node=}, coordinate={xyz[coordinate]}"
         )
     return np.mean(abs_error, axis=1)
-

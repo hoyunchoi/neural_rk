@@ -21,7 +21,7 @@ def plot_1d_image(
     """
     time: [S+1, ]
     position: [Nx+1, 1]
-    trajectory: [S+1, Nx, 1] if not periodic, [S+1, Nx+1, 1] if periodic
+    trajectory: if to_periodic is True, [S+1, Nx, 1], otherwise [S+1, Nx+1, 1]
     """
     if to_periodic:
         trajectory = np.stack([to_periodic_field(field) for field in trajectory], axis=0) # [S+1, Nx+1, 1]
@@ -44,7 +44,7 @@ def plot_1d(
 ) -> ScalarMappable:
     """
     position: [Nx+1, 1]
-    field: [Nx, 1] if not periodic, [Nx+1, 1] if periodic
+    trajectory: if to_periodic is True, [Nx, 1], otherwise [Nx+1, 1]
     """
     if to_periodic:
         field = to_periodic_field(field)
@@ -69,7 +69,7 @@ def plot_2d(
 ) -> tuple[ScalarMappable, ScalarMappable]:
     """
     position: [Ny+1, Nx+1, 2]
-    field: [Ny, Nx, 2] if not periodic, [Ny+1, Nx+1, 2] if periodic
+    trajectory: if to_periodic is True, [Ny, Nx, 2], otherwise [Ny+1, Nx+1, 2]
     """
     if to_periodic:
         field = to_periodic_field(field)

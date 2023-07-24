@@ -99,8 +99,8 @@ def solve(
     dts: arr,
     omega: arr,
 ) -> arr:
-    """Solve kuramoto equation
-
+    """
+    Solve kuramoto equation
     dtheta_i/dt = omega_i + sum_j K_ij A_ij sin (theta_j-theta_i)
 
     solver_name: How to solve.
@@ -110,7 +110,7 @@ def solve(
     omega: [N, 1], natural frequency of each node
     dts: [S, 1], dt for each time step
 
-    Return: [S+1, N, 1], trajectory
+    Return: [S+1, N, 1], phases
     """
     weighted_adjacency_matrix = gUtils.get_weighted_adjacency_matrix(graph, weights)
 
@@ -122,11 +122,11 @@ def solve(
     else:
         rk = functools.partial(rk4, weighted_adjacency_matrix, omega)
 
-    trajectory = np.stack([np.empty_like(phase)] * (len(dts) + 1))
-    trajectory[0] = phase
+    phases = np.stack([np.zeros_like(phase)] * (len(dts) + 1))
+    phases[0] = phase
 
     for step, dt in enumerate(dts):
         phase = rk(phase, dt)
-        trajectory[step + 1] = phase
+        phases[step + 1] = phase
 
-    return trajectory
+    return phases

@@ -231,6 +231,7 @@ def get_hp(options: list[str] | None = None) -> HyperParameter:
     parser.add_argument(
         "--wandb", action="store_true", help="If this flag is on, use wandb"
     )
+    parser.add_argument("--wandb_project", default="neural_RK")
     parser.add_argument(
         "--amp",
         action="store_true",
@@ -306,10 +307,15 @@ class ApproximatorParameter:
             assert len(self.edge_embedding) == 1
             assert len(self.glob_embedding) == 0
         elif self.equation == "rossler":
-            assert len(self.state_embedding) == 3
+            assert len(self.state_embedding) in [1, 3]
             assert len(self.node_embedding) == 0
             assert len(self.edge_embedding) == 1
-            assert len(self.glob_embedding) == 3
+            assert len(self.glob_embedding) in [1, 3]
+
+            if len(self.state_embedding) == 1:
+                self.state_embedding *= 3
+            if len(self.glob_embedding) == 1:
+                self.glob_embedding *= 3
         elif self.equation == "kuramoto":
             assert (
                 self.in_scaler == "sincos"
@@ -321,8 +327,9 @@ class ApproximatorParameter:
         elif self.equation == "burgers":
             assert len(self.state_embedding) == 1
             assert len(self.node_embedding) == 0
-            assert len(self.edge_embedding) <= 2
+            assert len(self.edge_embedding) in [1, 2]
             assert len(self.glob_embedding) == 1
+
             if len(self.edge_embedding) == 1:
                 self.edge_embedding *= 2
         else:
@@ -363,6 +370,7 @@ class HyperParameter:
     rollout_batch_size: int
     tqdm: bool
     wandb: bool
+    wandb_project: str
     amp: bool
 
     def __post_init__(self) -> None:

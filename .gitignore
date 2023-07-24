@@ -201,3 +201,4 @@ pyrightconfig.json
 # Data and result (checkpoint)
 data
 result
+wandb

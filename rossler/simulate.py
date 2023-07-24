@@ -1,86 +1,102 @@
 import sys
 from pathlib import Path
-from typing import Literal
 
+import networkx as nx
 import numpy as np
 import torch
 
 sys.path.append(str(Path(__file__).parents[1]))
 
-from neural_rk.path import DATA_DIR
-from neural_rk.protocol import IsDivergingProtocol
-from neural_rk.simulation_data import SimulationData, to_df
 from graph import get_ba, get_er, get_rr
-from graph.utils import get_degree_distribution, get_edge_list
+from graph.utils import get_edge_list
+from neural_rk.path import DATA_DIR
+from neural_rk.simulation_data import SimulationData, to_df
 from rossler import trajectory
 from rossler.simulation import argument, solve
 
 
 def main() -> None:
-    is_diverging: IsDivergingProtocol = trajectory.IsDivergingPrecise()
-
     args = argument.get_args()
     rng = np.random.default_rng(args.seed)
+    rng_graph = (
+        rng if args.seed_graph is None else np.random.default_rng(args.seed_graph)
+    )
+    is_diverging = trajectory.IsDivergingPrecise()
 
+    # * Avoid possibly unbounded warning
+    num_nodes, num_edges = 0, 0
+    graph = nx.Graph()
+    edge_list = np.array([], dtype=np.int64)
+    dts = np.array([], dtype=np.float32)
+    coupling = np.array([], dtype=np.float32)
+    params = (0.0, 0.0, 0.0)
+    initial_position = np.array([], dtype=np.float32)
+
+    # * Start simulation
     data: list[SimulationData] = []
-    num_networks = 0
-    while num_networks < args.num_networks:
-        num_nodes = argument.get_num_nodes(args.num_nodes, rng)
-        mean_degree = argument.get_mean_degree(args.mean_degree, rng)
+    num_diverging = 0
+    while len(data) < args.num_samples:
+        if len(data) == 0 or not args.const_graph:
+            # Graph setting
+            network_type = argument.get_network_type(args.network_type, rng_graph)
+            num_nodes = argument.get_num_nodes(args.num_nodes, rng_graph)
+            mean_degree = argument.get_mean_degree(args.mean_degree, rng_graph)
 
-        # * Graph-dependent variables
-        network_type: Literal["er", "ba", "rr"] = rng.choice(args.network_type)
-        if network_type == "ba":
-            graph = get_ba(num_nodes, mean_degree, rng)
-        elif network_type == "er":
-            graph = get_er(num_nodes, mean_degree, rng=rng)
-        else:
-            graph = get_rr(num_nodes, mean_degree, rng=rng)
+            if network_type == "er":
+                graph = get_er(num_nodes, mean_degree, rng=rng_graph)
+            elif network_type == "ba":
+                graph = get_ba(num_nodes, mean_degree, rng=rng_graph)
+            else:
+                graph = get_rr(num_nodes, mean_degree, rng=rng_graph)
 
-        num_nodes = graph.number_of_nodes()
-        num_edges = graph.number_of_edges()
-        edge_list = get_edge_list(graph)
+            # Since only gcc is selected, the graph can have smaller num_nodes
+            num_nodes = graph.number_of_nodes()
+            num_edges = graph.number_of_edges()
+            edge_list = get_edge_list(graph)
 
-        num_simulations, num_diverging = 0, 0
-        while num_simulations < args.num_simulations and num_diverging < 5:
-            params = argument.get_params(args.a, args.b, args.c, rng)  # [3, ]
-            dts = argument.get_dt(args.steps, args.dt, rng)  # [S, 1]
-            coupling = argument.get_coupling(  # [E, 1]
-                num_edges, args.coupling, rng
-            )
-
-            # * Initial condition
-            x = rng.uniform(-4.0, 4.0, size=num_nodes).astype(np.float32, copy=False)
-            y = rng.uniform(-4.0, 4.0, size=num_nodes).astype(np.float32, copy=False)
-            z = rng.uniform(0.0, 6.0, size=num_nodes).astype(np.float32, copy=False)
-            positions = np.stack((x, y, z))  # [3, N]
-
-            # * Solve Rossler equation
-            trajectory = solve.solve(  # [S+1, 3, N]
-                args.solver, graph, coupling, positions, dts, params
-            )
-
-            if is_diverging(torch.from_numpy(trajectory)):
-                max_degree = max(get_degree_distribution(graph))
-                print(f"{network_type=}, {mean_degree=}, {max_degree=}")
-                num_diverging += 1
+        if len(data) == 0 or not args.const_dt:
+            # dt setting
+            try:
+                dts = argument.get_dt(
+                    args.max_time, args.steps, args.dt_delta, tuple(args.dt_clip), rng
+                )
+            except ValueError:
+                print("Could not find proper dt")
                 continue
 
-            # * Store the result
-            num_simulations += 1
-            data.append(
-                {
-                    "network_type": network_type,
-                    "edge_index": edge_list,  # [E, 2]
-                    "node_attr": np.empty((num_nodes, 0), dtype=np.float32),  # [N, 0]
-                    "edge_attr": coupling,  # [E, 1]
-                    "glob_attr": params[None, :],  # [1, 3]
-                    "dts": dts,  # [S, 1]
-                    "trajectories": trajectory.transpose(0, 2, 1),  # [S+1, N, 3]
-                }
-            )
-        if num_simulations == args.num_simulations:
-            num_networks += 1
+        if len(data) == 0 or not args.const_param:
+            # params(params, coupling) setting
+            params = argument.get_params(args.a, args.b, args.c, rng)
+            coupling = argument.get_coupling(num_edges, args.coupling, rng)
+
+        if len(data) == 0 or not args.const_ic:
+            # Initial condition setting
+            initial_position = argument.get_initial_condition(num_nodes, rng)
+
+        # * Solve rossler equation
+        positions = solve.solve(
+            args.solver, graph, coupling, initial_position, dts, params
+        )
+
+        # * Check divergence of the trajectory
+        if is_diverging(torch.from_numpy(positions)):
+            # Divergence detected: drop the data
+            num_diverging += 1
+            print(f"{len(data)=}, {num_diverging=}")
+            continue
+
+        # * Store the result
+        data.append(
+            {
+                "network_type": network_type,
+                "edge_index": edge_list,  # [E, 2]
+                "node_attr": np.zeros((num_nodes, 0), dtype=np.float32),  # [N, 0]
+                "edge_attr": coupling,  # [E, 1]
+                "glob_attr": np.array(params, dtype=np.float32)[None, :],  # [1, 3]
+                "dts": dts,  # [S, 1]
+                "trajectories": positions,  # [S+1, N, 3]
+            }
+        )
 
     df = to_df(data)
     df.to_pickle(DATA_DIR / f"rossler_{args.name}.pkl")

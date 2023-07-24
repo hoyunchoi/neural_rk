@@ -9,11 +9,12 @@ import torch
 import torch.distributed as dist
 import torch.nn.functional as F
 import torch.optim as optim
-import wandb
 from torch.cuda.amp.grad_scaler import GradScaler
 from torch.nn.parallel.distributed import DistributedDataParallel as DDP
 from tqdm.auto import tqdm, trange
 from wandb.sdk.wandb_run import Run as WandbRun
+
+import wandb
 
 from . import trainer
 from .dataset import Dataset, get_data_loader
@@ -54,7 +55,7 @@ def config_wandb(use_wandb: bool, hp: dict[str, Any]) -> WandbRun | DummyWandbRu
     if use_wandb:
         wandb_run = cast(
             WandbRun,
-            wandb.init(project="de_unified", config=hp),
+            wandb.init(project=hp["wandb_project"], config=hp),
         )
         wandb_run.name = wandb_run.id
     else:
@@ -66,9 +67,6 @@ def run(
     rank: int,
     hp: HyperParameter,
     approximator: ApproximatorProtocol,
-    # train_dataset: Dataset,
-    # val_dataset: Dataset,
-    # rollout_dataset: Dataset,
     train_df: pd.DataFrame,
     val_df: pd.DataFrame,
     optimizer_state_dict: dict[str, torch.Tensor] | None = None,

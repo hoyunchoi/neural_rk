@@ -115,7 +115,7 @@ def solve(
     weights: arr,
     position: arr,
     dts: arr,
-    params: arr,
+    params: tuple[float, float, float],
 ) -> arr:
     """Solve coupled rossler attractor equation
     dx_i/dt = -y_i-z_i
@@ -127,19 +127,25 @@ def solve(
     weights: (E, 1) coupling strength of edges
     position: (3, N), Initial position of each node
     dts: (S, 1), dt for each time step
-    params: (3, ), three parameters a, b, c
+    params: three parameters a, b, c
 
-    Return: [S+1, 3, N], trajectory
+    Return: [S+1, N, 3], trajectory
     """
     weighted_adjacency_matrix = gUtils.get_weighted_adjacency_matrix(graph, weights)
 
     rk: Callable[[arr, arr], arr]
     if solver_name == "rk1":
-        rk = functools.partial(rk1, weighted_adjacency_matrix, params)
+        rk = functools.partial(
+            rk1, weighted_adjacency_matrix, np.array(params, dtype=np.float32)
+        )
     elif solver_name == "rk2":
-        rk = functools.partial(rk2, weighted_adjacency_matrix, params)
+        rk = functools.partial(
+            rk2, weighted_adjacency_matrix, np.array(params, dtype=np.float32)
+        )
     else:
-        rk = functools.partial(rk4, weighted_adjacency_matrix, params)
+        rk = functools.partial(
+            rk4, weighted_adjacency_matrix, np.array(params, dtype=np.float32)
+        )
 
     trajectory = np.stack([np.empty_like(position)] * (len(dts) + 1))
     trajectory[0] = position
@@ -148,4 +154,4 @@ def solve(
         position = rk(position, dt)
         trajectory[step + 1] = position
 
-    return trajectory
+    return trajectory.transpose(0, 2, 1)

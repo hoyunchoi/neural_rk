@@ -16,6 +16,7 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
         "--Nx",
         type=int,
         nargs="+",
+        default=[100],
         help=(
             "Number of grid points at x-axis. If given single value, it is constant. If"
             " given 2 values, uniform random between two values (inclusive). If given 3"
@@ -26,7 +27,7 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
         "--Ny",
         type=int,
         nargs="*",
-        default=[1],
+        default=[100],
         help=(
             "Number of grid points at y-axis. If the value is not given or the value is"
             " 1, run 1D burgers simulation. If given sigle value, it is constant. If"
@@ -106,7 +107,7 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
         "--nu",
         type=float,
         nargs="+",
-        default=[0.0],
+        default=[0.01],
         help=(
             "dissipation rate. If single value is given, it is constant over every"
             " edges. If two values are given, uniform random between two values"
@@ -190,6 +191,13 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
         default=None,
         help="If given, seed the random engine for reproducibility",
     )
+    parser.add_argument(
+        "--seed_ic",
+        type=int,
+        default=None,
+        help="If given, create new random engine only for initial condition. If not given use default random engine",
+    )
+
 
     # Parse the arguments and return
     if options is None:
@@ -373,7 +381,7 @@ def get_initial_condition(
     rng: np.random.Generator,
 ) -> Callable[[arr], arr]:
     """
-    Randomly generatie 2D periodic sin function
+    Create 2D periodic sin assignment function
 
     Args
     LxLy: Length of each axis x, y
@@ -381,14 +389,10 @@ def get_initial_condition(
     num_cycles: Number of cycles (periods) of field (u, v) at each axis (x,y)
 
     Return
-    function with argument: position, reuturn: initial condition
-
-    initial_condition: [Ny, Nx, 2], u,v of each grid point
+    function with
+        Args: position [Ny, Nx, 2]
+        Return: initial condition [Ny, Nx, 2], u,v of each grid point
     """
-
-    # pos_x, pos_y = position[:-1, :-1, 0], position[:-1, :-1, 1]
-    def sin(x: arr, period: float, phase: float) -> arr:
-        return np.sin(2.0 * np.pi / period * x - phase)
 
     # Period of each field (u, v) and axis (x, y)
     Lx, Ly = LxLy
@@ -400,7 +404,10 @@ def get_initial_condition(
     # Phase of each field (u, v) and axis (x, y)
     phases = rng.uniform(0.0, 2.0 * np.pi, size=(4,)).astype(np.float32)
 
-    def f(position: arr) -> arr:
+    def sin_2d(position: arr) -> arr:
+        def sin(x: arr, period: float, phase: float) -> arr:
+            return np.sin(2.0 * np.pi / period * x - phase)
+
         x, y = position[..., 0], position[..., 1]
         if ndim == 1:
             initial_u = sin(x, period_ux, phases[0])
@@ -409,7 +416,6 @@ def get_initial_condition(
             initial_u = sin(x, period_ux, phases[0]) * sin(y, period_uy, phases[1])
             initial_v = sin(x, period_vx, phases[2]) * sin(y, period_vy, phases[3])
 
-
         return np.stack((initial_u, initial_v), axis=-1)
 
-    return f
+    return sin_2d

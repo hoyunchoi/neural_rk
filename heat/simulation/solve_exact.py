@@ -30,7 +30,7 @@ def solve(graph: nx.Graph, weights: arr, temperature: arr, dts: arr) -> arr:
     eig_val, eig_vec = np.linalg.eigh(weighted_laplacian_matrix)
     coeff = np.dot(temperature, eig_vec)
 
-    trajectory = np.stack([np.empty_like(temperature)] * (len(dts) + 1))
+    trajectory = np.stack([np.zeros_like(temperature)] * (len(dts) + 1))
     trajectory[0] = temperature
 
     t = np.array(0.0, dtype=np.float32)
