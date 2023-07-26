@@ -1,7 +1,7 @@
 ============================================  Burgers ============================================
 Default values
 - Spacial domain: 0 <= x, y <= 1, Time domain: 0 <= T <= 2.0
-- Boundary condtion: periodic both x,y direction
+- Boundary condition: periodic both x,y direction
 - Initial condition: 2D sin function (sin(x) * sin(y)) with random phase, period of 1.0
 - Regular 2D lattice with spacing = 1.0 / 100 = 0.01
 - nu = 0.01
