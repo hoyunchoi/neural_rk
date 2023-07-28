@@ -1,3 +1,5 @@
+from typing import Union
+
 import networkx as nx
 import numpy as np
 
@@ -8,7 +10,7 @@ def get_er(
     num_nodes: int,
     mean_degree: float,
     gcc: bool = True,
-    rng: np.random.Generator | int | None = None,
+    rng: Union[np.random.Generator, int, None] = None,
 ) -> nx.Graph:
     """Get giant component of ER random graph
     num_nodes: number of nodes. returning graph could be smaller

@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import cast, overload
+from typing import Optional, Union, cast, overload
 
 import networkx as nx
 import numpy as np
@@ -35,7 +35,7 @@ def get_edge_list(graph: nx.Graph) -> npt.NDArray[np.int64]:
 def edge_list_2_adjacency_matrix(
     edge_list: npt.NDArray[np.int64],
     weights: npt.NDArray[np.float32],
-    num_nodes: int | None,
+    num_nodes: Optional[int],
 ) -> npt.NDArray[np.float32]:
     ...
 
@@ -44,7 +44,7 @@ def edge_list_2_adjacency_matrix(
 def edge_list_2_adjacency_matrix(
     edge_list: npt.NDArray[np.int64],
     weights: npt.NDArray[np.float64],
-    num_nodes: int | None,
+    num_nodes: Optional[int],
 ) -> npt.NDArray[np.float64]:
     ...
 
@@ -52,7 +52,7 @@ def edge_list_2_adjacency_matrix(
 def edge_list_2_adjacency_matrix(
     edge_list: npt.NDArray[np.int64],
     weights: np.ndarray,
-    num_nodes: int | None = None,
+    num_nodes: Optional[int] = None,
 ) -> np.ndarray:
     """
     edge list: (E, 2). If (0,1) is included in the edge list, (1,0) is not included\\
@@ -87,13 +87,13 @@ def get_weighted_adjacency_matrix(
 
 @overload
 def get_weighted_adjacency_matrix(
-    graph: nx.Graph, weights: npt.NDArray[np.float64] | float | None = None
+    graph: nx.Graph, weights: Union[npt.NDArray[np.float64], float, None]
 ) -> npt.NDArray[np.float64]:
     ...
 
 
 def get_weighted_adjacency_matrix(
-    graph: nx.Graph, weights: np.ndarray | float | None = None
+    graph: nx.Graph, weights: Union[np.ndarray, float, None] = None
 ) -> np.ndarray:
     """
     Return weighted adjacency matrix of shape [N, N].
@@ -128,13 +128,13 @@ def get_weighted_laplacian_matrix(
 
 @overload
 def get_weighted_laplacian_matrix(
-    graph: nx.Graph, weights: npt.NDArray[np.float64] | float | None
+    graph: nx.Graph, weights: Union[npt.NDArray[np.float64], float, None]
 ) -> npt.NDArray[np.float64]:
     ...
 
 
 def get_weighted_laplacian_matrix(
-    graph: nx.Graph, weights: np.ndarray | float | None = None
+    graph: nx.Graph, weights: Union[np.ndarray, float, None] = None
 ) -> np.ndarray:
     """
     Return weighted laplacian matrix

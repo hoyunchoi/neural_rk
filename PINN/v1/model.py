@@ -2,6 +2,11 @@ import torch
 import torch.nn as nn
 
 
+def count_trainable_param(model: nn.Module) -> int:
+    """Return number of trainable parameters of model"""
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+
 def get_batch_norm_layer(in_channels: int, bn_momentum: float = 1.0) -> nn.Module:
     """Return batch normalization with given momentum
     if given momentum is 1.0, return identity layer"""
@@ -22,7 +27,11 @@ def get_dropout_layer(dropout: float = 0.0) -> nn.Module:
 
 class Model(nn.Module):
     def __init__(
-        self, hidden_dim: int = 32, depth: int = 6, bn_momentum: float = 1.0, dropout: float = 0.0
+        self,
+        hidden_dim: int = 32,
+        depth: int = 6,
+        bn_momentum: float = 1.0,
+        dropout: float = 0.0,
     ) -> None:
         """
         Create 2-layer MLP module

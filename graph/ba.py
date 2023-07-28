@@ -1,9 +1,13 @@
+from typing import Union
+
 import networkx as nx
 import numpy as np
 
 
 def get_ba(
-    num_nodes: int, mean_degree: float, rng: np.random.Generator | int | None = None
+    num_nodes: int,
+    mean_degree: float,
+    rng: Union[np.random.Generator, int, None] = None,
 ) -> nx.Graph:
     """Get Barabasi-Albert scale-free network
     num_nodes: number of nodes

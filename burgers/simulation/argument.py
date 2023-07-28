@@ -1,5 +1,5 @@
 import argparse
-from typing import Callable
+from typing import Callable, Optional, Union
 
 import numpy as np
 import numpy.typing as npt
@@ -7,7 +7,7 @@ import numpy.typing as npt
 arr = npt.NDArray[np.float32]
 
 
-def get_args(options: list[str] | None = None) -> argparse.Namespace:
+def get_args(options: Union[str, list[str], None] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--name", help="Name of the dataset")
 
@@ -195,13 +195,17 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
         "--seed_ic",
         type=int,
         default=None,
-        help="If given, create new random engine only for initial condition. If not given use default random engine",
+        help=(
+            "If given, create new random engine only for initial condition. If not"
+            " given use default random engine"
+        ),
     )
-
 
     # Parse the arguments and return
     if options is None:
         return parser.parse_args()
+    elif isinstance(options, str):
+        return parser.parse_args(args=options.split(" "))
     else:
         return parser.parse_args(args=options)
 
@@ -210,7 +214,7 @@ def divide_randomly(
     total: float,
     size: int,
     delta_percentile: float,
-    clip: tuple[float | None, float | None],
+    clip: tuple[Optional[float], Optional[float]],
     rng: np.random.Generator,
 ) -> arr:
     """
@@ -285,7 +289,7 @@ def get_dxdy(
     LxLy: tuple[float, float],
     NxNy: tuple[int, int],
     delta_percentile: float,
-    clip: tuple[float | None, float | None, float | None, float | None],
+    clip: tuple[Optional[float], Optional[float], Optional[float], Optional[float]],
     rng: np.random.Generator,
 ) -> tuple[arr, arr]:
     """
@@ -317,7 +321,7 @@ def get_dt(
     max_time: list[float],
     steps: int,
     delta_percentile: float,
-    clip: tuple[float | None, float | None],
+    clip: tuple[Optional[float], Optional[float]],
     rng: np.random.Generator,
 ) -> arr:
     """

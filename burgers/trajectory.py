@@ -1,4 +1,4 @@
-from typing import cast
+from typing import Union, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -36,8 +36,8 @@ class IsDivergingPrecise:
 
 
 def compare_trajectory(
-    trajectory1: npt.NDArray[np.float32] | torch.Tensor,
-    trajectory2: npt.NDArray[np.float32] | torch.Tensor,
+    trajectory1: Union[npt.NDArray[np.float32], torch.Tensor],
+    trajectory2: Union[npt.NDArray[np.float32], torch.Tensor],
     log: bool = True,
 ) -> npt.NDArray[np.float32]:
     """

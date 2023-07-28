@@ -1,6 +1,6 @@
 import itertools
 from dataclasses import dataclass
-from typing import Generator, cast, overload
+from typing import Generator, Optional, cast, overload
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -22,7 +22,7 @@ class SHK:
         initial_num_nodes: int,
         final_num_nodes: int,
         params: SHKParams,
-        seed: int | None = None,
+        seed: Optional[int] = None,
     ) -> None:
         """
         initial_num_nodes: Number of nodes to be initialized
@@ -240,7 +240,7 @@ def get_shk(
     r: float = 1 / 3,
     s: float = 0.1,
     init_num_nodes: int = 1,
-    seed: int | None = None,
+    seed: Optional[int] = None,
 ) -> nx.Graph:
     grid = SHK(init_num_nodes, num_nodes, SHKParams(p, q, r, s), seed)
     return grid.graph

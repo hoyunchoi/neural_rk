@@ -1,4 +1,4 @@
-from typing import cast
+from typing import Union, cast
 
 import numpy as np
 import numpy.typing as npt
@@ -58,7 +58,7 @@ def grid2node(node_attr: arr) -> arr:
     raise ValueError
 
 
-def node2grid(node_attr: torch.Tensor | arr, *NxNy: int) -> arr:
+def node2grid(node_attr: Union[torch.Tensor, arr], *NxNy: int) -> arr:
     """
     Node point to grid point. Dimension of grid point corresponds to len(NxNy) \\
     Inverse of grid2node
@@ -129,7 +129,7 @@ def dxdy2edge(*dxdy: arr) -> arr:
     raise ValueError
 
 
-def edge2dxdy(edge_attr: torch.Tensor | arr, *NxNy: int) -> tuple[arr, ...]:
+def edge2dxdy(edge_attr: Union[torch.Tensor, arr], *NxNy: int) -> tuple[arr, ...]:
     """
     From the edge attributes, generate spacing of each axis \\
     Inverse of dxdy2edge

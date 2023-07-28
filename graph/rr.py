@@ -1,3 +1,5 @@
+from typing import Union
+
 import networkx as nx
 import numpy as np
 
@@ -6,9 +8,9 @@ from .utils import filter_gcc
 
 def get_rr(
     num_nodes: int,
-    mean_degree: float | int,
+    mean_degree: Union[float, int],
     gcc: bool = True,
-    rng: np.random.Generator | int | None = None,
+    rng: Union[np.random.Generator, int, None] = None,
 ) -> nx.Graph:
     """Get giant component of random-regular graph
     num_nodes: number of nodes. returning graph could be smaller
