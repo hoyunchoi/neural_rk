@@ -1,10 +1,9 @@
 import torch
-from torch.utils.data import DataLoader
 import torch.nn as nn
-import torch.optim as optim
 import torch.nn.functional as F
-
+import torch.optim as optim
 from loss import bc_derivative_mse, pde_mse
+from torch.utils.data import DataLoader
 
 
 def train_ic(
