@@ -1,11 +1,72 @@
+======================================  Burgers Dirichlet ========================================
+Default values
+- Spacial domain: 0 <= x, y <= 1, Time domain: 0 <= T <= 1.0
+- Boundary condition: Dirichlet. u(x, y) = v(x, y) = 0 for (x,y) in boundary
+- Initial condition: 2D sin function (sin(x) * sin(y)) with period of 1.0, asymetric peak
+- Regular 2D lattice with spacing = 1.0 / 100 = 0.01
+- nu = 0.01
+- Use 4th order Runge-Kutta method with uniform time step. dt = 1.0 / 1000 = 10^-3
+---------- [Initial Condition] ----------
+- Initial condition: Different over all samples
+
+< Commands >
+python burgers_dirichlet/simulate.py --name=IC_train --num_samples=20 --seed=0 --seed_ic=42 --const_graph --const_dt --const_param &;
+python burgers_dirichlet/simulate.py --name=IC_val --num_samples=10 --seed=1 --seed_ic=43 --const_graph --const_dt --const_param &;
+python burgers_dirichlet/simulate.py --name=IC_test --num_samples=10 --seed=2 --seed_ic=44 --const_graph --const_dt --const_param &;
+
+
+---------- [Grid/Graph] ----------
+- Graph(Grid): Non-regular 2D square lattice with different sizes, where spacings differes +-10% of uniform grid. Different over all samples
+- Initial condition: Same over all samples in functional form, but data points are different
+
+< Commands >
+python burgers_dirichlet/simulate.py --name=G_train --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=20 --seed=3 --seed_ic=45 --const_dt --const_param --const_ic &;
+python burgers_dirichlet/simulate.py --name=G_val --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=10 --seed=4 --seed_ic=45 --const_dt --const_param --const_ic &;
+python burgers_dirichlet/simulate.py --name=G_test --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=10 --seed=5 --seed_ic=45 --const_dt --const_param --const_ic &;
+
+
+---------- [Parameter] ----------
+- nu: choosen randomly between 0.005 and 0.01. nu is different over all samples
+
+< Commands >
+python burgers_dirichlet/simulate.py --name=P_train --nu 0.005 0.01 --num_samples=50 --seed=6 --seed_ic=46 --const_graph --const_dt --const_ic &;
+python burgers_dirichlet/simulate.py --name=P_val --nu 0.005 0.01 --num_samples=20 --seed=7 --seed_ic=46 --const_graph --const_dt --const_ic &;
+python burgers_dirichlet/simulate.py --name=P_test --nu 0.005 0.01 --num_samples=20 --seed=8 --seed_ic=46 --const_graph --const_dt --const_ic &;
+
+
+---------- [RK, dt] ----------
+- RK1 for training/validation, RK4 for test. Time steps is non-uniform, which differes +-10% of uniform time step. Time steps different over all samples
+
+< Commands >
+python burgers_dirichlet/simulate.py --name=RK_train --solver=rk1 --dt_delta=0.1 --num_samples=20 --seed=9 --seed_ic=47 --const_graph --const_param --const_ic &;
+python burgers_dirichlet/simulate.py --name=RK_val --solver=rk1 --dt_delta=0.1 --num_samples=10 --seed=10 --seed_ic=47 --const_graph --const_param --const_ic &;
+python burgers_dirichlet/simulate.py --name=RK_test --solver=rk4 --dt_delta=0.1 --num_samples=10 --seed=11 --seed_ic=47 --const_graph --const_param --const_ic &;
+
+
+---------- [All] ----------
+Every 4 domain is different
+- Initial condition: Different over all samples
+- Graph(Grid): Non-regular 2D square lattice with different sizes, where spacings differes +-10% of uniform grid. Different over all samples
+- nu: choosen randomly between 0.005 and 0.01. nu is different over all samples
+- RK1 for training/validation, RK4 for test. Time steps is non-uniform, which differes +-10% of uniform time step. Time steps different over all samples
+
+< Commands >
+python burgers_dirichlet/simulate.py --name=A_train --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --nu 0.005 0.01 --solver=rk1 --dt_delta=0.1 --num_samples=50 --seed=12 --seed_ic=48 &;
+python burgers_dirichlet/simulate.py --name=A_val --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --nu 0.005 0.01 --solver=rk1 --dt_delta=0.1 --num_samples=20 --seed=13 --seed_ic=49 &;
+python burgers_dirichlet/simulate.py --name=A_test --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --nu 0.005 0.01 --solver=rk4 --dt_delta=0.1 --num_samples=20 --seed=14 --seed_ic=50 &;
+
+
+
+
 ============================================  Burgers ============================================
 Default values
-- Spacial domain: 0 <= x, y <= 1, Time domain: 0 <= T <= 2.0
+- Spacial domain: 0 <= x, y <= 1, Time domain: 0 <= T <= 1.0
 - Boundary condition: periodic both x,y direction
 - Initial condition: 2D sin function (sin(x) * sin(y)) with random phase, period of 1.0
 - Regular 2D lattice with spacing = 1.0 / 100 = 0.01
 - nu = 0.01
-- Use 4th order Runge-Kutta method with uniform time step. dt = 2.0 / 2000 = 10^-3
+- Use 4th order Runge-Kutta method with uniform time step. dt = 1.0 / 1000 = 10^-3
+
 
 ---------- [Initial Condition] ----------
 - Initial condition: Different over all samples
@@ -14,6 +75,7 @@ Default values
 python burgers/simulate.py --name=IC_train --num_samples=20 --seed=0 --seed_ic=42 --const_graph --const_dt --const_param &;
 python burgers/simulate.py --name=IC_val --num_samples=10 --seed=1 --seed_ic=43 --const_graph --const_dt --const_param &;
 python burgers/simulate.py --name=IC_test --num_samples=10 --seed=2 --seed_ic=44 --const_graph --const_dt --const_param &;
+
 
 ---------- [Grid/Graph] ----------
 - Graph(Grid): Non-regular 2D square lattice with different sizes, where spacings differes +-10% of uniform grid. Different over all samples
@@ -24,6 +86,7 @@ python burgers/simulate.py --name=G_train --Nx 50 150 --Ny 50 150 --dx_delta 0.1
 python burgers/simulate.py --name=G_val --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=10 --seed=4 --seed_ic=45 --const_dt --const_param --const_ic &;
 python burgers/simulate.py --name=G_test --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=10 --seed=5 --seed_ic=45 --const_dt --const_param --const_ic &;
 
+
 ---------- [Parameter] ----------
 - nu: choosen randomly between 0.005 and 0.01. nu is different over all samples
 
@@ -32,6 +95,7 @@ python burgers/simulate.py --name=P_train --nu 0.005 0.01 --num_samples=50 --see
 python burgers/simulate.py --name=P_val --nu 0.005 0.01 --num_samples=20 --seed=7 --seed_ic=46 --const_graph --const_dt --const_ic &;
 python burgers/simulate.py --name=P_test --nu 0.005 0.01 --num_samples=20 --seed=8 --seed_ic=46 --const_graph --const_dt --const_ic &;
 
+
 ---------- [RK, dt] ----------
 - RK1 for training/validation, RK4 for test. Time steps is non-uniform, which differes +-10% of uniform time step. Time steps different over all samples
 
@@ -39,6 +103,7 @@ python burgers/simulate.py --name=P_test --nu 0.005 0.01 --num_samples=20 --seed
 python burgers/simulate.py --name=RK_train --solver=rk1 --dt_delta=0.1 --num_samples=20 --seed=9 --seed_ic=47 --const_graph --const_param --const_ic &;
 python burgers/simulate.py --name=RK_val --solver=rk1 --dt_delta=0.1 --num_samples=10 --seed=10 --seed_ic=47 --const_graph --const_param --const_ic &;
 python burgers/simulate.py --name=RK_test --solver=rk4 --dt_delta=0.1 --num_samples=10 --seed=11 --seed_ic=47 --const_graph --const_param --const_ic &;
+
 
 ---------- [All] ----------
 Every 4 domain is different
@@ -54,6 +119,7 @@ python burgers/simulate.py --name=A_test --Nx 50 150 --Ny 50 150 --dx_delta=0.1 
 
 
 
+
 ============================================  Heat ============================================
 Default values
 - Time domain: 0 <= T <= 2.0
@@ -62,6 +128,7 @@ Default values
 - Dissipation rate = 0.5 for all edges
 - Use 4th order Runge-Kutta method with uniform time step, dt = 2.0 / 100 = 0.02
 
+
 ---------- [Initial Condition] ----------
 - Initial condition: Different over all samples. Ratio of hot spots are uniformly choosen in [0.1, 0.9]
 
@@ -69,6 +136,7 @@ Default values
 python heat/simulate.py --name=IC_train --hot_ratio 0.1 0.9 --num_samples=20 --const_graph --const_dt --const_param --seed=0 --seed_graph=42 &;
 python heat/simulate.py --name=IC_val --hot_ratio 0.1 0.9 --num_samples=10 --const_graph --const_dt --const_param --seed=1 --seed_graph=42 &;
 python heat/simulate.py --name=IC_test --hot_ratio 0.1 0.9 --num_samples=10 --const_graph --const_dt --const_param --seed=2 --seed_graph=42 &;
+
 
 ---------- [Grid/Graph] ----------
 - Initial condition: ratio of hot spots is constant, but data is different over samples because graph is changing
@@ -80,6 +148,7 @@ python heat/simulate.py --name=G_train --network_type er ba rr --num_nodes 50 15
 python heat/simulate.py --name=G_val --network_type er ba rr --num_nodes 50 150 --mean_degree 2.0 6.0 --num_samples=20 --const_ic --const_dt --const_param --seed=4 --seed_graph=44 &;
 python heat/simulate.py --name=G_test --network_type er ba rr --num_nodes 50 150 --mean_degree 2.0 6.0 --num_samples=20 --const_ic --const_dt --const_param --seed=5 --seed_graph=45 &;
 
+
 ---------- [Parameter] ----------
 - Dissipation rate: random values between [0.1, 1.0], different over all edges and samples
 
@@ -88,6 +157,7 @@ python heat/simulate.py --name=P_train --dissipation 0.1 1.0 --num_samples=20 --
 python heat/simulate.py --name=P_val --dissipation 0.1 1.0 --num_samples=10 --const_graph --const_dt --const_ic --seed=7 --seed_graph=46 &;
 python heat/simulate.py --name=P_test --dissipation 0.1 1.0 --num_samples=10 --const_graph --const_dt --const_ic --seed=8 --seed_graph=46 &;
 
+
 ---------- [RK, dt] ----------
 - RK1 for training/validation, RK4 for test. Time steps is non-uniform, which differes +-10% of uniform time step. Time steps different over all samples
 
@@ -95,6 +165,7 @@ python heat/simulate.py --name=P_test --dissipation 0.1 1.0 --num_samples=10 --c
 python heat/simulate.py --name=RK_train --solver=rk1 --dt_delta=0.1 --num_samples=50 --const_graph --const_param --const_ic --seed=9 --seed_graph=47 &;
 python heat/simulate.py --name=RK_val --solver=rk1 --dt_delta=0.1 --num_samples=20 --const_graph --const_param --const_ic --seed=10 --seed_graph=47 &;
 python heat/simulate.py --name=RK_test --solver=rk4 --dt_delta=0.1 --num_samples=20 --const_graph --const_param --const_ic --seed=11 --seed_graph=47 &;
+
 
 ---------- [All] ----------
 Every 4 domain is different
@@ -109,6 +180,8 @@ python heat/simulate.py --name=A_val --network_type er ba rr --num_nodes 50 150 
 python heat/simulate.py --name=A_test --network_type er ba rr --num_nodes 50 150 --mean_degree 2.0 6.0 --hot_ratio 0.1 0.9 --dissipation 0.1 1.0 --solver=rk4 --dt_delta=0.1 --num_samples=40 --seed=14 --seed_graph=50 &;
 
 
+
+
 ============================================  Kuramoto ============================================
 Default values
 - Time domain: 0 <= T <= 10.0
@@ -118,6 +191,7 @@ Default values
 - Coupling constant: 0.3 for all edges
 - Use 4th order Runge-Kutta method with uniform time step, dt = 10.0 / 500 = 0.02
 
+
 ---------- [Initial Condition] ----------
 - Initial condition: different over samples.
 
@@ -125,6 +199,7 @@ Default values
 python kuramoto/simulate.py --name=IC_train --num_samples=20 --const_graph --const_dt --const_param --seed=0 --seed_graph=42 &;
 python kuramoto/simulate.py --name=IC_val --num_samples=10 --const_graph --const_dt --const_param --seed=1 --seed_graph=42 &;
 python kuramoto/simulate.py --name=IC_test --num_samples=10 --const_graph --const_dt --const_param --seed=2 --seed_graph=42 &;
+
 
 ---------- [Grid/Graph] ----------
 - Initial condition: Different over samples because graph is changing
@@ -171,6 +246,8 @@ python kuramoto/simulate.py --name=A_val --network_type er ba rr --num_nodes 50 
 python kuramoto/simulate.py --name=A_test --network_type er ba rr --num_nodes 50 150 --mean_degree 4.0 6.0 --coupling 0.1 0.5 --solver=rk4 --dt_delta=0.1 --num_samples=40 --seed=14 --seed_graph=50 &;
 
 
+
+
 ============================================  Rossler ============================================
 Default values
 - Time domain: 0 <= T <= 40.0
@@ -180,6 +257,7 @@ Default values
 - Coupling: 0.03 for all edges
 - Use 4th order Runge-Kutta method with uniform time step, dt = 40.0 / 2000 = 0.02
 
+
 ---------- [Initial Condition] ----------
 - Initial condition: Different over samples
 
@@ -187,6 +265,7 @@ Default values
 python rossler/simulate.py --name=IC_train --num_samples=20 --const_graph --const_dt --const_param --seed=0 --seed_graph=42 &;
 python rossler/simulate.py --name=IC_val --num_samples=10 --const_graph --const_dt --const_param --seed=1 --seed_graph=42 &;
 python rossler/simulate.py --name=IC_test --num_samples=10 --const_graph --const_dt --const_param --seed=2 --seed_graph=42 &;
+
 
 ---------- [Grid/Graph] ----------
 - Initial condition: Different over samples because graph is changing

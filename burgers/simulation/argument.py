@@ -123,17 +123,6 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
         help="Which Runge-Kutta method to solve equation",
     )
     parser.add_argument(
-        "--max_time",
-        type=float,
-        nargs="+",
-        default=[2.0],
-        help=(
-            "Maximum time for simulation. If single is given, it is const over samples."
-            " If two values are given, uniform random between two values (inclusive)."
-            " If 3 or more values are given, choose among them."
-        ),
-    )
-    parser.add_argument(
         "--steps",
         type=int,
         default=2000,
@@ -195,9 +184,11 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
         "--seed_ic",
         type=int,
         default=None,
-        help="If given, create new random engine only for initial condition. If not given use default random engine",
+        help=(
+            "If given, create new random engine only for initial condition. If not"
+            " given use default random engine"
+        ),
     )
-
 
     # Parse the arguments and return
     if options is None:
@@ -314,7 +305,7 @@ def get_dxdy(
 
 
 def get_dt(
-    max_time: list[float],
+    max_time: float,
     steps: int,
     delta_percentile: float,
     clip: tuple[float | None, float | None],
@@ -332,17 +323,11 @@ def get_dt(
     Return
     dt: [S, 1]
     """
-    # Randomly select maximum time
-    if len(max_time) <= 2:
-        max_t = rng.uniform(min(max_time), max(max_time))
-    else:
-        max_t = rng.choice(max_time)
-
     # Make negative value to None
     clip = tuple(map(lambda x: x if isinstance(x, float) and x > 0 else None, clip))
 
     # Sample dt
-    return divide_randomly(max_t, steps, delta_percentile, clip, rng)[:, None]
+    return divide_randomly(max_time, steps, delta_percentile, clip, rng)[:, None]
 
 
 def get_nu(

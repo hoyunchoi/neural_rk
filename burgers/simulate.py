@@ -17,7 +17,7 @@ from neural_rk.path import DATA_DIR
 from neural_rk.simulation_data import SimulationData, to_df
 
 arr = npt.NDArray[np.float32]
-Lx, Ly = 1.0, 1.0  # x, y length of the domain
+Lx, Ly, max_time = 1.0, 1.0, 2.0  # x, y length of the domain
 
 
 def main() -> None:
@@ -68,7 +68,7 @@ def main() -> None:
             # dt setting
             try:
                 dts = argument.get_dt(
-                    args.max_time, args.steps, args.dt_delta, tuple(args.dt_clip), rng
+                    max_time, args.steps, args.dt_delta, tuple(args.dt_clip), rng
                 )
             except ValueError:
                 print("Could not find proper dt")
