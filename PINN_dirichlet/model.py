@@ -76,14 +76,14 @@ class Model(nn.Module):
         use_bias = bn_momentum == 1.0
 
         # 3 -> hidden -> ... -> hidden -> 2
-        modules = get_slp_layer(in_dim, hidden_dim, use_bias, act, bn_momentum, dropout)
+        modules = get_slp_layer(in_dim, hidden_dim, use_bias, bn_momentum, dropout, act)
         for _ in range(depth - 2):
             modules.extend(
-                get_slp_layer(hidden_dim, hidden_dim, use_bias, act, bn_momentum, dropout)
+                get_slp_layer(hidden_dim, hidden_dim, use_bias, bn_momentum, dropout, act)
             )
         modules.extend(
             get_slp_layer(
-                hidden_dim, out_dim, use_bias, act, bn_momentum, dropout, last=True
+                hidden_dim, out_dim, use_bias, bn_momentum, dropout, act, last=True
             )
         )
 
