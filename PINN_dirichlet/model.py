@@ -20,8 +20,8 @@ def get_dropout_layer(dropout: float = 0.0) -> nn.Module:
         return nn.Dropout(dropout)
 
 
-def get_activation(activation: str) -> nn.Module:
-    match:
+def get_activation(act: str) -> nn.Module:
+    match act:
         case "relu":
             return nn.ReLU()
         case "gelu":
@@ -41,9 +41,9 @@ def get_slp_layer(
     in_dim: int,
     out_dim: int,
     use_bias: bool,
-    act: str = "gelu",
     bn_momentum: float,
     dropout: float,
+    act: str = "gelu",
     last: bool = False,
 ) -> list[nn.Module]:
     if last:
