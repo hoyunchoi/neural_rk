@@ -146,7 +146,7 @@ def run(
     if hp.resume:
         resume_dir = RESULT_DIR / f"{hp.equation}_{hp.resume}"
         mae_df = pd.read_csv(resume_dir / "mae.txt", sep="\t")
-        best_val: float = np.amin(mae_df["rollout_mae"])
+        best_val= np.amin(mae_df["rollout_mae"]).item()
         early_stop.resume(0, best_val)
 
     # Empty variables to store train trajectory

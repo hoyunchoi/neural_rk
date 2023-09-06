@@ -41,10 +41,10 @@ def compare_trajectory(
     log: bool = True,
 ) -> npt.NDArray[np.float32]:
     """
-    trajectory1: [S+1, N, 3]
-    trajectory2: [S+1, N, 3]
+    trajectory1: [S+1, N, 2]
+    trajectory2: [S+1, N, 2]
 
-    return: [S+1, 3], MAE of each time step, flow. averaged over nodes
+    return: [S+1, 2], MAE of each time step, flow. averaged over nodes
     """
     if isinstance(trajectory1, torch.Tensor):
         trajectory1 = trajectory1.cpu().numpy()

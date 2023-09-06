@@ -118,7 +118,7 @@ def get_hp(options: list[str] | None = None) -> HyperParameter:
     parser.add_argument(
         "--approximator_bn_momentum",
         type=float,
-        default=1.0,
+        default=-1.0,
         help="Batch normalization momentum. If given, apply batch normalization",
     )
 

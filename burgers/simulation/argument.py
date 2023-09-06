@@ -54,51 +54,25 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
 
     # * Initial condition
     parser.add_argument(
-        "--num_cycles_ux",
-        type=int,
+        "--phase",
+        type=float,
+        default=[0.0],
         nargs="+",
-        default=[1],
         help=(
-            "Number of cycle(periods) for field u, direction x. If the given single"
-            " value, constant over all samples.  If given 2 values, uniform random"
-            " between two values (inclusive). If given 3 or more values, choose among"
-            " them."
+            "Phase of initial field. If the given single value, constant over all"
+            " samples. If given 2 values, uniform random between two values and (-pi,"
+            " pi) (inclusive). If given 3 or more values, choose among them."
         ),
     )
     parser.add_argument(
-        "--num_cycles_uy",
-        type=int,
+        "--offset",
+        type=float,
+        default=[0.5],
         nargs="+",
-        default=[1],
         help=(
-            "Number of cycle(periods) for field u, direction y. If the given single"
-            " value, constant over all samples.  If given 2 values, uniform random"
-            " between two values. (inclusive) If given 3 or more values, choose among"
-            " them."
-        ),
-    )
-    parser.add_argument(
-        "--num_cycles_vx",
-        type=int,
-        nargs="+",
-        default=[1],
-        help=(
-            "Number of cycle(periods) for field v, direction x. If the given single"
-            " value, constant over all samples.  If given 2 values, uniform random"
-            " between two values (inclusive). If given 3 or more values, choose among"
-            " them."
-        ),
-    )
-    parser.add_argument(
-        "--num_cycles_vy",
-        type=int,
-        nargs="+",
-        default=[1],
-        help=(
-            "Number of cycle(periods) for field v, direction y. If the given single"
-            " value, constant over all samples.  If given 2 values, uniform random"
-            " between two values (inclusive). If given 3 or more values, choose among"
-            " them."
+            "Offset of initial field. If the given single value, constant over"
+            " all samples. If given 2 values, uniform random between two values"
+            " (inclusive). If given 3 or more values, choose among them."
         ),
     )
 
@@ -125,7 +99,7 @@ def get_args(options: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--steps",
         type=int,
-        default=2000,
+        default=1000,
         help=(
             "Number of time steps per simulation. dt is determined by the average of"
             " max_time / steps."
@@ -359,10 +333,8 @@ def get_nu(
 def get_initial_condition(
     LxLy: tuple[float, float],
     ndim: int,
-    num_cycles_ux: list[int],
-    num_cycles_uy: list[int],
-    num_cycles_vx: list[int],
-    num_cycles_vy: list[int],
+    args_phase: list[float],
+    args_offset: list[float],
     rng: np.random.Generator,
 ) -> Callable[[arr], arr]:
     """
@@ -371,36 +343,57 @@ def get_initial_condition(
     Args
     LxLy: Length of each axis x, y
     ndim: dimension, 1 or 2
-    num_cycles: Number of cycles (periods) of field (u, v) at each axis (x,y)
+    args_phase: Initial phase of each field (u, v) and axis (x, y) will be randomly selected
+    args_offset: Initial offset of each field (u, v) and axis (x, y) will be randomly selected
+    args_asymmetry: Initial asymmetry of each field (u, v) and axis (x, y) will be randomly selected
+
 
     Return
     function with
         Args: position [Ny, Nx, 2]
         Return: initial condition [Ny, Nx, 2], u,v of each grid point
     """
-
-    # Period of each field (u, v) and axis (x, y)
     Lx, Ly = LxLy
-    period_ux = Lx / rng.integers(min(num_cycles_ux), max(num_cycles_ux), endpoint=True)
-    period_uy = Ly / rng.integers(min(num_cycles_uy), max(num_cycles_uy), endpoint=True)
-    period_vx = Lx / rng.integers(min(num_cycles_vx), max(num_cycles_vx), endpoint=True)
-    period_vy = Ly / rng.integers(min(num_cycles_vy), max(num_cycles_vy), endpoint=True)
 
     # Phase of each field (u, v) and axis (x, y)
-    phases = rng.uniform(0.0, 2.0 * np.pi, size=(4,)).astype(np.float32)
+    args_phase = np.clip(np.array(args_phase), -np.pi, np.pi, dtype=np.float32)
+    if len(args_phase) <= 2:
+        phase = rng.uniform(min(args_phase), max(args_phase), size=(4,)).astype(
+            np.float32
+        )
+    else:
+        phase = rng.choice(args_phase, size=(4,)).astype(np.float32)
 
-    def sin_2d(position: arr) -> arr:
+    # Offset of each field (u, v) and axis (x, y)
+    if len(args_offset) <= 2:
+        offset = rng.uniform(min(args_offset), max(args_offset), size=(4,)).astype(
+            np.float32
+        )
+    else:
+        offset = rng.choice(args_offset, size=(4,)).astype(np.float32)
+
+    def asymmetric_sin_2d(position: arr) -> arr:
         def sin(x: arr, period: float, phase: float) -> arr:
             return np.sin(2.0 * np.pi / period * x - phase)
 
         x, y = position[..., 0], position[..., 1]
         if ndim == 1:
-            initial_u = sin(x, period_ux, phases[0])
+            asymmetry_u = np.exp(-((x - offset[0]) ** 2.0))
+            initial_u = sin(x, Lx, phase[0]) * asymmetry_u
             initial_v = np.zeros_like(initial_u)  # zero-field for 1d
         else:
-            initial_u = sin(x, period_ux, phases[0]) * sin(y, period_uy, phases[1])
-            initial_v = sin(x, period_vx, phases[2]) * sin(y, period_vy, phases[3])
+            asymmetry_u = np.exp(
+                -((x - offset[0]) ** 2 + (y - offset[1]) ** 2)
+            )
+            asymmetry_v = np.exp(
+                -((x - offset[2]) ** 2 + (y - offset[3]) ** 2)
+            )
+            initial_u = sin(x, Lx, phase[0]) * sin(y, Ly, phase[1]) * asymmetry_u
+            initial_v = sin(x, Lx, phase[2]) * sin(y, Ly, phase[3]) * asymmetry_v
+
+        initial_u /= np.abs(initial_u).max()
+        initial_v /= np.abs(initial_v).max()
 
         return np.stack((initial_u, initial_v), axis=-1)
 
-    return sin_2d
+    return asymmetric_sin_2d

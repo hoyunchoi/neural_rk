@@ -1,0 +1,595 @@
+Reading data took 45.19469176605344 seconds
+Creating model took 1.7365392446517944 seconds
+Traceback (most recent call last):
+  File "/pds/pds11/hoyun/neural_rk/main.py", line 112, in <module>
+    main(hp)
+  File "/pds/pds11/hoyun/neural_rk/main.py", line 92, in main
+    mp.spawn(  # type:ignore
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 240, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method='spawn')
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 198, in start_processes
+    while not context.join():
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 160, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 3 terminated with the following error:
+Traceback (most recent call last):
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 69, in _wrap
+    fn(i, *args)
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/experiment.py", line 205, in run
+    train_loss, train_mae = train(
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/trainer.py", line 39, in train
+    delta_x = model(
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1008, in forward
+    output = self._run_ddp_forward(*inputs, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 971, in _run_ddp_forward
+    return module_to_run(*inputs, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/modules/runge_kutta.py", line 86, in forward
+    states.append(approx(x + intermediate_state * dt))
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/neural_rk/burgers/approximator.py", line 174, in forward
+    result = self.node_calculator(result)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/modules/mlp.py", line 48, in forward
+    return self.mlp(x)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/container.py", line 139, in forward
+    input = module(input)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 114, in forward
+    return F.linear(input, self.weight, self.bias)
+RuntimeError: CUDA out of memory. Tried to allocate 80.00 MiB (GPU 3; 10.75 GiB total capacity; 9.86 GiB already allocated; 30.50 MiB free; 9.96 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+Reading data took 4.3434474635869265 seconds
+Creating model took 1.7874041851609945 seconds
+Traceback (most recent call last):
+  File "/pds/pds11/hoyun/neural_rk/main.py", line 112, in <module>
+    main(hp)
+  File "/pds/pds11/hoyun/neural_rk/main.py", line 92, in main
+    mp.spawn(  # type:ignore
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 240, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method='spawn')
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 198, in start_processes
+    while not context.join():
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 160, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 2 terminated with the following error:
+Traceback (most recent call last):
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 69, in _wrap
+    fn(i, *args)
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/experiment.py", line 205, in run
+    train_loss, train_mae = train(
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/trainer.py", line 39, in train
+    delta_x = model(
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 1008, in forward
+    output = self._run_ddp_forward(*inputs, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/parallel/distributed.py", line 971, in _run_ddp_forward
+    return module_to_run(*inputs, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/modules/runge_kutta.py", line 86, in forward
+    states.append(approx(x + intermediate_state * dt))
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/neural_rk/burgers/approximator.py", line 143, in forward
+    derivative_per_edge = self.derivative_calculator(derivative_per_edge)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/modules/mlp.py", line 48, in forward
+    return self.mlp(x)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/container.py", line 139, in forward
+    input = module(input)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/nn/modules/activation.py", line 681, in forward
+    return F.gelu(input, approximate=self.approximate)
+RuntimeError: CUDA out of memory. Tried to allocate 80.00 MiB (GPU 2; 10.75 GiB total capacity; 9.84 GiB already allocated; 64.50 MiB free; 9.93 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+Reading data took 4.302403807640076 seconds
+Creating model took 1.7115404903888702 seconds
+Reading data took 2.4806350357830524 seconds
+Creating model took 0.8084781393408775 seconds
+Reading data took 44.86794319283217 seconds
+Creating model took 0.8016565991565585 seconds
+Start running experiment burgers_8qkg7anu
+Number of trainable parameters : 10818
+Number of train data: 40000
+Number of validation data: 20000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=2
+Best model at epoch=4
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=7
+Best model at epoch=10
+Best model at epoch=11
+Best model at epoch=13
+Best model at epoch=15
+Training took 7607.829907050356 seconds
+Start running experiment burgers_ktt95ch7
+Number of trainable parameters : 10818
+Number of train data: 40000
+Number of validation data: 20000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=1
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=7
+Best model at epoch=8
+Best model at epoch=9
+Best model at epoch=10
+Training took 9651.509678341448 seconds
+Start running experiment burgers_kvfkyfiw
+Number of trainable parameters : 10818
+Number of train data: 40000
+Number of validation data: 20000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=1
+Best model at epoch=2
+Best model at epoch=4
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=8
+Best model at epoch=12
+Best model at epoch=63
+Best model at epoch=65
+Best model at epoch=66
+Training took 7959.472778969444 seconds
+Reading data took 163.75787758640945 seconds
+Creating model took 0.8174454402178526 seconds
+Reading data took 240.84102220088243 seconds
+Creating model took 1.6415800470858812 seconds
+Reading data took 500.23858505208045 seconds
+Creating model took 1.9891473818570375 seconds
+Start running experiment burgers_go15qri0
+Number of trainable parameters : 10818
+Number of train data: 40000
+Number of validation data: 20000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=2
+Best model at epoch=3
+Best model at epoch=4
+Best model at epoch=5
+Best model at epoch=7
+Best model at epoch=11
+Best model at epoch=16
+Best model at epoch=25
+Best model at epoch=30
+Best model at epoch=32
+Best model at epoch=33
+Best model at epoch=38
+Training took 5618.965729122981 seconds
+Start running experiment burgers_5gypaxkc
+Number of trainable parameters : 10818
+Number of train data: 40000
+Number of validation data: 20000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=1
+Best model at epoch=2
+Best model at epoch=3
+Best model at epoch=5
+Best model at epoch=85
+Best model at epoch=90
+Best model at epoch=91
+Best model at epoch=95
+Best model at epoch=98
+Best model at epoch=99
+Best model at epoch=103
+Best model at epoch=131
+Best model at epoch=136
+Training took 6876.138084867969 seconds
+Reading data took 4.401196926832199 seconds
+Creating model took 1.5590797867625952 seconds
+Start running experiment burgers_smvgrjk3
+Number of trainable parameters : 10818
+Number of train data: 100000
+Number of validation data: 40000
+Number of rollout data: 20
+Best model at epoch=0
+Best model at epoch=1
+Best model at epoch=4
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=7
+wandb: - 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: \ 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: | 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: / 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: - 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: \ 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: | 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 8 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+wandb: / 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: - 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: \ 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)wandb: | 0.005 MB of 0.005 MB uploaded (0.000 MB deduped)Reading data took 262.61030756495893 seconds
+Creating model took 0.8586680376902223 seconds
+Reading data took 488.94026766344905 seconds
+Creating model took 1.9788948595523834 seconds
+Start running experiment burgers_azk1v48o
+Number of trainable parameters : 10818
+Number of train data: 40000
+Number of validation data: 20000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=2
+Best model at epoch=3
+Best model at epoch=4
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=9
+Best model at epoch=10
+Best model at epoch=12
+Best model at epoch=16
+Best model at epoch=20
+Best model at epoch=22
+Best model at epoch=27
+Best model at epoch=30
+Best model at epoch=38
+Best model at epoch=45
+Best model at epoch=49
+Best model at epoch=53
+Best model at epoch=57
+Best model at epoch=64
+Best model at epoch=75
+Best model at epoch=78
+Best model at epoch=82
+Best model at epoch=95
+Best model at epoch=97
+Best model at epoch=109
+Best model at epoch=110
+Best model at epoch=121
+Best model at epoch=125
+Training took 10736.460770338774 seconds
+Start running experiment burgers_chkfo38h
+Number of trainable parameters : 10818
+Number of train data: 40000
+Number of validation data: 20000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=6
+Best model at epoch=8
+Best model at epoch=9
+Best model at epoch=10
+Best model at epoch=11
+Best model at epoch=12
+Best model at epoch=13
+Best model at epoch=14
+Best model at epoch=16
+Best model at epoch=20
+Best model at epoch=22
+Best model at epoch=29
+Best model at epoch=34
+Best model at epoch=46
+Best model at epoch=57
+Best model at epoch=67
+Best model at epoch=68
+Best model at epoch=77
+Best model at epoch=87
+Best model at epoch=90
+Best model at epoch=100
+Best model at epoch=101
+Best model at epoch=107
+Best model at epoch=111
+Training took 13532.037101276219 seconds
+Start running experiment burgers_4l38zi28
+Number of trainable parameters : 10818
+Number of train data: 100000
+Number of validation data: 40000
+Number of rollout data: 20
+Best model at epoch=0
+Best model at epoch=4
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=7
+Best model at epoch=8
+Best model at epoch=22
+Best model at epoch=27
+Best model at epoch=29
+Best model at epoch=30
+Best model at epoch=37
+Best model at epoch=46
+Best model at epoch=47
+Best model at epoch=56
+Best model at epoch=60
+Best model at epoch=66
+Best model at epoch=67
+Best model at epoch=80
+Best model at epoch=117
+Best model at epoch=128
+Best model at epoch=133
+Best model at epoch=135
+Best model at epoch=136
+Training took 21799.143159564584 seconds
+Reading data took 26.50808902643621 seconds
+Creating model took 0.5193174462765455 seconds
+Reading data took 46.38489506393671 seconds
+Creating model took 3.96820804849267 seconds
+Traceback (most recent call last):
+  File "/pds/pds11/hoyun/neural_rk/main.py", line 112, in <module>
+    main(hp)
+  File "/pds/pds11/hoyun/neural_rk/main.py", line 92, in main
+    mp.spawn(  # type:ignore
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 240, in spawn
+    return start_processes(fn, args, nprocs, join, daemon, start_method='spawn')
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 198, in start_processes
+    while not context.join():
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 160, in join
+    raise ProcessRaisedException(msg, error_index, failed_process.pid)
+torch.multiprocessing.spawn.ProcessRaisedException: 
+
+-- Process 3 terminated with the following error:
+Traceback (most recent call last):
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/multiprocessing/spawn.py", line 69, in _wrap
+    fn(i, *args)
+  File "/pds/pds11/hoyun/neural_rk/neural_rk/experiment.py", line 80, in run
+    dist.init_process_group("nccl", rank=rank, world_size=world_size)
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py", line 602, in init_process_group
+    default_pg = _new_process_group_helper(
+  File "/pds/pds11/hoyun/miniconda3/envs/gnn/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py", line 738, in _new_process_group_helper
+    pg = ProcessGroupNCCL(prefix_store, rank, world_size, pg_options)
+RuntimeError: ProcessGroupNCCL is only supported with GPUs, no GPUs found!
+
+usage: main.py [-h] [--equation {heat,rossler,kuramoto,burgers}] [--data DATA]
+               [--noise NOISE] [--take_only TAKE_ONLY] [--window WINDOW]
+               [--rk {RK1,RK2,RK4}]
+               [--approximator_in_scaler {identity,standard,minmax,sincos}]
+               [--approximator_out_scaler {identity,standard,minmax}]
+               [--approximator_state_embedding APPROXIMATOR_STATE_EMBEDDING [APPROXIMATOR_STATE_EMBEDDING ...]]
+               [--approximator_node_embedding APPROXIMATOR_NODE_EMBEDDING [APPROXIMATOR_NODE_EMBEDDING ...]]
+               [--approximator_edge_embedding APPROXIMATOR_EDGE_EMBEDDING [APPROXIMATOR_EDGE_EMBEDDING ...]]
+               [--approximator_glob_embedding APPROXIMATOR_GLOB_EMBEDDING [APPROXIMATOR_GLOB_EMBEDDING ...]]
+               [--approximator_edge_hidden APPROXIMATOR_EDGE_HIDDEN]
+               [--approximator_node_hidden APPROXIMATOR_NODE_HIDDEN]
+               [--approximator_dropout APPROXIMATOR_DROPOUT]
+               [--approximator_bn_momentum APPROXIMATOR_BN_MOMENTUM]
+               [--loss {MSE,MAE,MSE_heat,MSE_kuramoto}]
+               [--optimizer {Adagrad,Adam,AdamW,RMSprop,SGD}]
+               [--weight_decay WEIGHT_DECAY]
+               [--scheduler_name {cosine,step,exponential}]
+               [--scheduler_lr SCHEDULER_LR]
+               [--scheduler_lr_max SCHEDULER_LR_MAX]
+               [--scheduler_period SCHEDULER_PERIOD]
+               [--scheduler_warmup SCHEDULER_WARMUP]
+               [--scheduler_lr_max_mult SCHEDULER_LR_MAX_MULT]
+               [--scheduler_period_mult SCHEDULER_PERIOD_MULT]
+               [--earlystop_patience EARLYSTOP_PATIENCE]
+               [--earlystop_delta EARLYSTOP_DELTA] [--resume RESUME]
+               [--device {cpu,cuda:0,cuda:1,cuda:2,cuda:3,0,1,2,3} [{cpu,cuda:0,cuda:1,cuda:2,cuda:3,0,1,2,3} ...]]
+               [--port PORT] [--seed SEED] [--epochs EPOCHS]
+               [--batch_size BATCH_SIZE]
+               [--rollout_batch_size ROLLOUT_BATCH_SIZE] [--tqdm] [--wandb]
+               [--wandb_project WANDB_PROJECT] [--amp]
+main.py: error: argument --rk: invalid choice: 'rk1' (choose from 'RK1', 'RK2', 'RK4')
+Start running experiment burgers_ksypyrsf
+Number of trainable parameters : 10818
+Number of train data: 20000
+Number of validation data: 10000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=2
+Best model at epoch=6
+Best model at epoch=7
+Best model at epoch=8
+Best model at epoch=9
+Best model at epoch=10
+Best model at epoch=12
+Best model at epoch=15
+Best model at epoch=16
+Best model at epoch=17
+Best model at epoch=18
+Best model at epoch=20
+Best model at epoch=21
+Best model at epoch=22
+Best model at epoch=23
+Best model at epoch=28
+Best model at epoch=33
+Best model at epoch=37
+Best model at epoch=43
+Best model at epoch=44
+Best model at epoch=48
+Best model at epoch=50
+Best model at epoch=51
+Best model at epoch=52
+Best model at epoch=53
+Best model at epoch=70
+Best model at epoch=85
+Best model at epoch=92
+Best model at epoch=95
+Best model at epoch=99
+Best model at epoch=111
+Best model at epoch=114
+Best model at epoch=117
+Best model at epoch=143
+Best model at epoch=145
+Best model at epoch=149
+Best model at epoch=154
+Training took 2701.5632780119777 seconds
+Reading data took 28.91042680479586 seconds
+Creating model took 0.43517524376511574 seconds
+  [--noise NOISE] [--take_only TAKE_ONLY] [--window WINDOW]
+               [--rk {RK1,RK2,RK4}]
+               [--approximator_in_scaler {identity,standard,minmax,sincos}]
+               [--approximator_out_scaler {identity,standard,minmax}]
+               [--approximator_state_embedding APPROXIMATOR_STATE_EMBEDDING [APPROXIMATOR_STATE_EMBEDDING ...]]
+               [--approximator_node_embedding APPROXIMATOR_NODE_EMBEDDING [APPROXIMATOR_NODE_EMBEDDING ...]]
+               [--approximator_edge_embedding APPROXIMATOR_EDGE_EMBEDDING [APPROXIMATOR_EDGE_EMBEDDING ...]]
+               [--approximator_glob_embedding APPROXIMATOR_GLOB_EMBEDDING [APPROXIMATOR_GLOB_EMBEDDING ...]]
+               [--approximator_edge_hidden APPROXIMATOR_EDGE_HIDDEN]
+               [--approximator_node_hidden APPROXIMATOR_NODE_HIDDEN]
+               [--approximator_dropout APPROXIMATOR_DROPOUT]
+               [--approximator_bn_momentum APPROXIMATOR_BN_MOMENTUM]
+               [--loss {MSE,MAE,MSE_heat,MSE_kuramoto}]
+               [--optimizer {Adagrad,Adam,AdamW,RMSprop,SGD}]
+               [--weight_decay WEIGHT_DECAY]
+               [--scheduler_name {cosine,step,exponential}]
+               [--scheduler_lr SCHEDULER_LR]
+               [--scheduler_lr_max SCHEDULER_LR_MAX]
+               [--scheduler_period SCHEDULER_PERIOD]
+               [--scheduler_warmup SCHEDULER_WARMUP]
+               [--scheduler_lr_max_mult SCHEDULER_LR_MAX_MULT]
+               [--scheduler_period_mult SCHEDULER_PERIOD_MULT]
+               [--earlystop_patience EARLYSTOP_PATIENCE]
+               [--earlystop_delta EARLYSTOP_DELTA] [--resume RESUME]
+               [--device {cpu,cuda:0,cuda:1,cuda:2,cuda:3,0,1,2,3} [{cpu,cuda:0,cuda:1,cuda:2,cuda:3,0,1,2,3} ...]]
+               [--port PORT] [--seed SEED] [--epochs EPOCHS]
+               [--batch_size BATCH_SIZE]
+               [--rollout_batch_size ROLLOUT_BATCH_SIZE] [--tqdm] [--wandb]
+               [--wandb_project WANDB_PROJECT] [--amp]
+main.py: error: argument --rk: invalid choice: 'rk1' (choose from 'RK1', 'RK2', 'RK4')
+Reading data took 28.825386518612504 seconds
+Creating model took 0.8736405558884144 seconds
+Start running experiment burgers_gxz6f3ba
+Number of trainable parameters : 10818
+Number of train data: 20000
+Number of validation data: 10000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=4
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=7
+Best model at epoch=8
+Best model at epoch=12
+Best model at epoch=15
+Best model at epoch=18
+Best model at epoch=20
+Best model at epoch=21
+Best model at epoch=22
+Best model at epoch=23
+Best model at epoch=24
+Best model at epoch=35
+Best model at epoch=37
+Best model at epoch=41
+Best model at epoch=42
+Best model at epoch=46
+Best model at epoch=50
+Best model at epoch=54
+Best model at epoch=55
+Best model at epoch=61
+Best model at epoch=62
+Best model at epoch=83
+Best model at epoch=84
+Best model at epoch=95
+Best model at epoch=106
+Best model at epoch=107
+Best model at epoch=116
+Best model at epoch=122
+Best model at epoch=126
+Best model at epoch=131
+Best model at epoch=139
+Best model at epoch=142
+Best model at epoch=149
+Training took 3894.6247043544427 seconds
+Start running experiment burgers_3skwmmif
+Number of trainable parameters : 10818
+Number of train data: 20000
+Number of validation data: 10000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=8
+Best model at epoch=9
+Best model at epoch=10
+Best model at epoch=11
+Best model at epoch=14
+Best model at epoch=16
+Best model at epoch=17
+Best model at epoch=21
+Best model at epoch=22
+Best model at epoch=25
+Best model at epoch=27
+Best model at epoch=33
+Best model at epoch=34
+Best model at epoch=37
+Best model at epoch=40
+Best model at epoch=41
+Best model at epoch=45
+Best model at epoch=50
+Best model at epoch=53
+Best model at epoch=54
+Best model at epoch=57
+Best model at epoch=58
+Best model at epoch=59
+Best model at epoch=71
+Best model at epoch=78
+Best model at epoch=91
+Best model at epoch=96
+Best model at epoch=120
+Best model at epoch=157
+Training took 2685.017228303477 seconds
+Start running experiment burgers_4lzibgea
+Number of trainable parameters : 10818
+Number of train data: 20000
+Number of validation data: 10000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=4
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=7
+Best model at epoch=9
+Best model at epoch=10
+Best model at epoch=12
+Best model at epoch=16
+Best model at epoch=20
+Best model at epoch=21
+Best model at epoch=30
+Best model at epoch=37
+Best model at epoch=41
+Best model at epoch=50
+Best model at epoch=52
+Best model at epoch=55
+Best model at epoch=61
+Best model at epoch=68
+Best model at epoch=79
+Training took 3558.1549869868904 seconds
+Reading data took 1.3735824143514037 seconds
+Creating model took 0.4447820568457246 seconds
+Start running experiment burgers_1150yan1
+Number of trainable parameters : 10818
+Number of train data: 20000
+Number of validation data: 10000
+Number of rollout data: 10
+Best model at epoch=0
+Best model at epoch=5
+Best model at epoch=6
+Best model at epoch=7
+Best model at epoch=8
+Best model at epoch=10
+Best model at epoch=11
+Best model at epoch=12
+Best model at epoch=13
+Best model at epoch=17
+Best model at epoch=19
+Best model at epoch=25
+Best model at epoch=28
+Best model at epoch=31
+Best model at epoch=34
+Best model at epoch=42
+Best model at epoch=55
+Best model at epoch=61
+Best model at epoch=66
+Best model at epoch=68
+Best model at epoch=91
+Best model at epoch=99
+Best model at epoch=109
+Best model at epoch=113
+Best model at epoch=121
+Best model at epoch=129
+Best model at epoch=130
+Best model at epoch=145
+Best model at epoch=151
+Training took 2906.4717903789133 seconds
+Reading data took 7.08211528416723 seconds
+Creating model took 0.28342554345726967 seconds

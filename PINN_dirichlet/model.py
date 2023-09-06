@@ -35,7 +35,7 @@ def get_activation(act: str) -> nn.Module:
         case "leaky_relu":
             return nn.LeakyReLU()
         case _:
-            raise ValueError(f"Invalid activation: {activation}")
+            raise ValueError(f"Invalid activation: {act}")
 
 def get_slp_layer(
     in_dim: int,
@@ -51,8 +51,8 @@ def get_slp_layer(
     else:
         return [
             nn.Linear(in_dim, out_dim, bias=use_bias),
-            get_batch_norm_layer(out_dim, bn_momentum),
             get_activation(act),
+            get_batch_norm_layer(out_dim, bn_momentum),
             get_dropout_layer(dropout),
         ]
 

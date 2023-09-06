@@ -24,9 +24,11 @@ def plot_1d_image(
     trajectory: if to_periodic is True, [S+1, Nx, 1], otherwise [S+1, Nx+1, 1]
     """
     if to_periodic:
-        trajectory = np.stack([to_periodic_field(field) for field in trajectory], axis=0) # [S+1, Nx+1, 1]
+        trajectory = np.stack(
+            [to_periodic_field(field) for field in trajectory], axis=0
+        )  # [S+1, Nx+1, 1]
 
-    trajectory = trajectory.squeeze().T # [Nx+1, S+1]
+    trajectory = trajectory.squeeze().T  # [Nx+1, S+1]
     time_pos = np.stack(np.meshgrid(time, position.squeeze()), axis=0)  # [2, Nx+1, S+1]
 
     heatmap = ax.pcolormesh(
@@ -34,6 +36,7 @@ def plot_1d_image(
     )
 
     return heatmap
+
 
 def plot_1d(
     ax: plt.Axes,
@@ -56,6 +59,52 @@ def plot_1d(
     ax.set_xlim(position.min(), position.max())
     ax.set_ylim(*lim)
     return sc
+
+def plot_2d_snapshot(
+    ax1: plt.Axes,
+    ax2: plt.Axes,
+    position: arr,
+    field: arr,
+    lim: tuple[float, float] = (-1.0, 1.0),
+    to_periodic: bool = True,
+    **kwargs
+) -> tuple[ScalarMappable, ScalarMappable]:
+    """
+    position: [Ny+1, Nx+1, 2]
+    field: [Ny, Nx, 2]
+    """
+    if to_periodic:
+        field = to_periodic_field(field)
+    u, v = field[..., 0], field[..., 1]
+
+    im1 = ax1.pcolormesh(
+        position[..., 0],
+        position[..., 1],
+        u,
+        cmap="RdBu",
+        vmin=lim[0],
+        vmax=lim[1],
+        edgecolors="face",
+        snap=True,
+        **kwargs
+    )
+    im2 = ax2.pcolormesh(
+        position[..., 0],
+        position[..., 1],
+        v,
+        cmap="RdBu",
+        vmin=lim[0],
+        vmax=lim[1],
+        edgecolors="face",
+        snap=True,
+        **kwargs
+    )
+    ax1.set_xticks([])
+    ax1.set_yticks([])
+    ax2.set_xticks([])
+    ax2.set_yticks([])
+
+    return im1, im2
 
 
 

@@ -62,60 +62,57 @@ python burgers_dirichlet/simulate.py --name=A_test --Nx 50 150 --Ny 50 150 --dx_
 Default values
 - Spacial domain: 0 <= x, y <= 1, Time domain: 0 <= T <= 1.0
 - Boundary condition: periodic both x,y direction
-- Initial condition: 2D sin function (sin(x) * sin(y)) with random phase, period of 1.0
+- Initial condition: 2D sin function (sin(x) * sin(y)) * exp(-x^2-y^2), period of 1.0
 - Regular 2D lattice with spacing = 1.0 / 100 = 0.01
 - nu = 0.01
 - Use 4th order Runge-Kutta method with uniform time step. dt = 1.0 / 1000 = 10^-3
 
 
----------- [Initial Condition] ----------
+---------- [Initial Condition] : Dataset I ----------
 - Initial condition: Different over all samples
 
 < Commands >
-python burgers/simulate.py --name=IC_train --num_samples=20 --seed=0 --seed_ic=42 --const_graph --const_dt --const_param &;
-python burgers/simulate.py --name=IC_val --num_samples=10 --seed=1 --seed_ic=43 --const_graph --const_dt --const_param &;
-python burgers/simulate.py --name=IC_test --num_samples=10 --seed=2 --seed_ic=44 --const_graph --const_dt --const_param &;
+python burgers/simulate.py --name=IC_train --num_samples=20 --phase -3.15 3.15 --offset 0.0 1.0 --seed=0 --seed_ic=42 --const_graph --const_dt --const_param &;
+python burgers/simulate.py --name=IC_val --num_samples=10 --phase -3.15 3.15 --offset 0.0 1.0 --seed=1 --seed_ic=43 --const_graph --const_dt --const_param &;
+python burgers/simulate.py --name=IC_test --num_samples=50 --phase -3.15 3.15 --offset 0.0 1.0 --seed=2 --seed_ic=44 --const_graph --const_dt --const_param &;
 
+---------- [Parameter] : Dataset II ----------
+- nu: choosen randomly between 0.005 and 0.02. nu is different over all samples
 
----------- [Grid/Graph] ----------
+< Commands >
+python burgers/simulate.py --name=P_train --nu 0.005 0.02 --num_samples=20 --seed=6 --seed_ic=46 --const_graph --const_dt --const_ic &;
+python burgers/simulate.py --name=P_val --nu 0.005 0.02 --num_samples=10 --seed=7 --seed_ic=46 --const_graph --const_dt --const_ic &;
+python burgers/simulate.py --name=P_test --nu 0.005 0.02 --num_samples=50 --seed=8 --seed_ic=46 --const_graph --const_dt --const_ic &;
+
+---------- [Grid/Graph] : Dataset III ----------
 - Graph(Grid): Non-regular 2D square lattice with different sizes, where spacings differes +-10% of uniform grid. Different over all samples
 - Initial condition: Same over all samples in functional form, but data points are different
 
 < Commands >
 python burgers/simulate.py --name=G_train --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=20 --seed=3 --seed_ic=45 --const_dt --const_param --const_ic &;
 python burgers/simulate.py --name=G_val --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=10 --seed=4 --seed_ic=45 --const_dt --const_param --const_ic &;
-python burgers/simulate.py --name=G_test --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=10 --seed=5 --seed_ic=45 --const_dt --const_param --const_ic &;
+python burgers/simulate.py --name=G_test --Nx 50 150 --Ny 50 150 --dx_delta 0.1 --num_samples=50 --seed=5 --seed_ic=45 --const_dt --const_param --const_ic &;
 
-
----------- [Parameter] ----------
-- nu: choosen randomly between 0.005 and 0.01. nu is different over all samples
-
-< Commands >
-python burgers/simulate.py --name=P_train --nu 0.005 0.01 --num_samples=50 --seed=6 --seed_ic=46 --const_graph --const_dt --const_ic &;
-python burgers/simulate.py --name=P_val --nu 0.005 0.01 --num_samples=20 --seed=7 --seed_ic=46 --const_graph --const_dt --const_ic &;
-python burgers/simulate.py --name=P_test --nu 0.005 0.01 --num_samples=20 --seed=8 --seed_ic=46 --const_graph --const_dt --const_ic &;
-
-
----------- [RK, dt] ----------
+---------- [RK, dt] : Dataset IV ----------
 - RK1 for training/validation, RK4 for test. Time steps is non-uniform, which differes +-10% of uniform time step. Time steps different over all samples
 
 < Commands >
 python burgers/simulate.py --name=RK_train --solver=rk1 --dt_delta=0.1 --num_samples=20 --seed=9 --seed_ic=47 --const_graph --const_param --const_ic &;
 python burgers/simulate.py --name=RK_val --solver=rk1 --dt_delta=0.1 --num_samples=10 --seed=10 --seed_ic=47 --const_graph --const_param --const_ic &;
-python burgers/simulate.py --name=RK_test --solver=rk4 --dt_delta=0.1 --num_samples=10 --seed=11 --seed_ic=47 --const_graph --const_param --const_ic &;
+python burgers/simulate.py --name=RK_test --solver=rk4 --dt_delta=0.1 --num_samples=50 --seed=11 --seed_ic=47 --const_graph --const_param --const_ic &;
 
 
----------- [All] ----------
+---------- [All] : Dataset V (사용안함) ----------
 Every 4 domain is different
 - Initial condition: Different over all samples
 - Graph(Grid): Non-regular 2D square lattice with different sizes, where spacings differes +-10% of uniform grid. Different over all samples
-- nu: choosen randomly between 0.005 and 0.01. nu is different over all samples
+- nu: choosen randomly between 0.005 and 0.02. nu is different over all samples
 - RK1 for training/validation, RK4 for test. Time steps is non-uniform, which differes +-10% of uniform time step. Time steps different over all samples
 
 < Commands >
-python burgers/simulate.py --name=A_train --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --nu 0.005 0.01 --solver=rk1 --dt_delta=0.1 --num_samples=50 --seed=12 --seed_ic=48 &;
-python burgers/simulate.py --name=A_val --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --nu 0.005 0.01 --solver=rk1 --dt_delta=0.1 --num_samples=20 --seed=13 --seed_ic=49 &;
-python burgers/simulate.py --name=A_test --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --nu 0.005 0.01 --solver=rk4 --dt_delta=0.1 --num_samples=20 --seed=14 --seed_ic=50 &;
+python burgers/simulate.py --name=A_train --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --phase -3.15 3.15 --offset 0.0 1.0 --nu 0.005 0.02 --solver=rk1 --dt_delta=0.1 --num_samples=50 --seed=12 --seed_ic=48 &;
+python burgers/simulate.py --name=A_val --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --phase -3.15 3.15 --offset 0.0 1.0 --nu 0.005 0.02 --solver=rk1 --dt_delta=0.1 --num_samples=20 --seed=13 --seed_ic=49 &;
+python burgers/simulate.py --name=A_test --Nx 50 150 --Ny 50 150 --dx_delta=0.1 --phase -3.15 3.15 --offset 0.0 1.0 --nu 0.005 0.02 --solver=rk4 --dt_delta=0.1 --num_samples=50 --seed=14 --seed_ic=50 &;
 
 
 

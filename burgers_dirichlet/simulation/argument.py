@@ -390,7 +390,7 @@ def get_initial_condition(
     # Offset of each field (u, v) and axis (x, y)
     offset = rng.uniform(0.0, 1.0, size=(4,)).astype(np.float32)
 
-    def asaymmetric_sin_2d(position: arr) -> arr:
+    def asymmetric_sin_2d(position: arr) -> arr:
         def sin(x: arr, period: float, phase: float = 0.0) -> arr:
             return np.sin(2.0 * np.pi / period * x - phase)
 
@@ -414,4 +414,4 @@ def get_initial_condition(
 
         return np.stack((initial_u, initial_v), axis=-1)
 
-    return asaymmetric_sin_2d
+    return asymmetric_sin_2d

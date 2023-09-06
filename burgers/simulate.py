@@ -17,7 +17,7 @@ from neural_rk.path import DATA_DIR
 from neural_rk.simulation_data import SimulationData, to_df
 
 arr = npt.NDArray[np.float32]
-Lx, Ly, max_time = 1.0, 1.0, 2.0  # x, y length of the domain
+Lx, Ly, max_time = 1.0, 1.0, 1.0  # x, y, t length of the domain
 
 
 def main() -> None:
@@ -83,10 +83,8 @@ def main() -> None:
             get_initial_condition = argument.get_initial_condition(
                 (Lx, Ly),
                 ndim,
-                args.num_cycles_ux,
-                args.num_cycles_uy,
-                args.num_cycles_vx,
-                args.num_cycles_vy,
+                args.phase,
+                args.offset,
                 rng_ic,
             )
 
